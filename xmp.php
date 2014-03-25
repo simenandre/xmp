@@ -22,20 +22,20 @@
 
 class XMP {
 
-	private $max_size = 512000;
-	private $chunk_size = 65536;
-	private $start_tag = '<x:xmpmeta';
-	private $end_tag = '</x:xmpmeta>';
+        static private $max_size = 512000;
+        static private $chunk_size = 65536;
+        static private $start_tag = '<x:xmpmeta';
+        static private $end_tag = '</x:xmpmeta>';
 
-	private $cache_dir = '/tmp/';
-	static $use_cache = true;
-	
-	static function read($filename){
-		$xmp_raw = self::get_xmp_raw($filename);
-		return self::get_xmp_array($xmp_raw);
-	}
+        static private $cache_dir = '/tmp/';
+        static $use_cache = true;
+        
+        static function read($filename){
+                $xmp_raw = self::get_xmp_raw($filename);
+                return self::get_xmp_array($xmp_raw);
+        }
 
-	private static function get_xmp_raw( $filepath ) {
+        private static function get_xmp_raw( $filepath ) {
  
         $max_size = 512000;     // maximum size read
         $chunk_size = 65536;    // read 64k at a time
@@ -52,14 +52,14 @@ class XMP {
                 fclose( $cache_fh );
  
         } elseif ( $file_fh = fopen( $filepath, 'rb' ) ) {
- 
+                                $chunk = "";
                 $file_size = filesize( $filepath );
                 while ( ( $file_pos = ftell( $file_fh ) ) < $file_size  && $file_pos < self::$max_size ) {
                         $chunk .= fread( $file_fh, self::$chunk_size );
                         if ( ( $end_pos = strpos( $chunk, self::$end_tag ) ) !== false ) {
                                 if ( ( $start_pos = strpos( $chunk, self::$start_tag ) ) !== false ) {
  
-                                        $xmp_raw = substr( $chunk, self::$start_pos, 
+                                        $xmp_raw = substr( $chunk, $start_pos, 
                                                 $end_pos - $start_pos + strlen( self::$end_tag ) );
  
                                         if ( self::$use_cache == true && $cache_fh = fopen( $cache_file, 'wb' ) ) {
@@ -74,9 +74,9 @@ class XMP {
                 fclose( $file_fh );
         }
         return $xmp_raw;
-	}
+        }
 
-	private static function get_xmp_array( &$xmp_raw ) {
+        private static function get_xmp_array( &$xmp_raw ) {
         $xmp_arr = array();
         foreach ( array(
                 'Creator Email' => '<Iptc4xmpCore:CreatorContactInfo[^>]+?CiEmailWork="([^"]*)"',
