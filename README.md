@@ -1,0 +1,4 @@
+xmp
+===
+
+XMP PHP Reader
