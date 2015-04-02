@@ -104,6 +104,21 @@ class XMP {
  
                 // if string contains a list, then re-assign the variable as an array with the list elements
                 $xmp_arr[$key] = preg_match_all( "/<rdf:li[^>]*>([^>]*)<\/rdf:li>/is", $xmp_arr[$key], $match ) ? $match[1] : $xmp_arr[$key];
+                
+                //descriptions may have language descriptors 
+                if ( $key === 'Description' ) {
+			//change the index of the keys to a corresponding value
+		        $ac = $match[0];
+		        $temp = array();
+					
+		        foreach($ac as $k => $el) {
+			        preg_match_all("/<rdf:li xml:lang='(.*)'>([^>]*)<\\/rdf:li>/is", $el, $mm);
+				$kk = $mm[1][0];
+	        		$temp["$kk"] = $mm[2];
+			}
+			$xmp_arr[$key] = $temp;	
+		        unset($temp,$kk);
+		}
  
                 // hierarchical keywords need to be split into a third dimension
                 if ( ! empty( $xmp_arr[$key] ) && $key == 'Hierarchical Keywords' ) {
