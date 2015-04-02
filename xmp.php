@@ -114,7 +114,7 @@ class XMP {
 		        foreach($ac as $k => $el) {
 			        preg_match_all("/<rdf:li xml:lang='(.*)'>([^>]*)<\\/rdf:li>/is", $el, $mm);
 				$kk = $mm[1][0];
-	        		$temp["$kk"] = $mm[2];
+	        		$temp["$kk"] = $mm[2][0];
 			}
 			$xmp_arr[$key] = $temp;	
 		        unset($temp,$kk);
